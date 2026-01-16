@@ -110,11 +110,21 @@ Probability/InfoTheory/
 ```bash
 cd RESEARCHER_BUNDLE
 
-# Build (requires Lean 4.24.0 and Mathlib)
+# First time: fetch dependencies (downloads ~500MB)
+lake update
+
+# Build (first build compiles Mathlib, takes 30-60 min)
+# Subsequent builds are fast (seconds)
 lake build --wfail
 
 # Verify no sorry/admit
 grep -r "sorry\|admit" HeytingLean/ && echo "FAIL" || echo "PASS"
+```
+
+**Tip**: For faster first build, use Mathlib cache if available:
+```bash
+lake exe cache get  # Downloads pre-built Mathlib oleans
+lake build --wfail
 ```
 
 ## Mathematical Framework

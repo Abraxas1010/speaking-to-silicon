@@ -1,3 +1,8 @@
+import HeytingLean.Probability.InfoTheory.FinDist
+import HeytingLean.Probability.InfoTheory.Entropy
+import HeytingLean.Probability.InfoTheory.MutualInfo
+import HeytingLean.Silicon
+
 /-!
 # HeytingLean: Speaking to Silicon
 
@@ -19,8 +24,3 @@ lake build --wfail
 Part of the HeytingLean formalization project.
 See: https://github.com/Abraxas1010/HeytingLean
 -/
-
-import HeytingLean.Probability.InfoTheory.FinDist
-import HeytingLean.Probability.InfoTheory.Entropy
-import HeytingLean.Probability.InfoTheory.MutualInfo
-import HeytingLean.Silicon
