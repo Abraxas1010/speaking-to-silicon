@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0b0f14"/>
+      <stop offset="100%" style="stop-color:#1a1f2e"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#bg)"/>
+
+  <!-- Title -->
+  <text x="400" y="35" text-anchor="middle" fill="#4a9eff" font-family="system-ui" font-size="18" font-weight="bold">Speaking to Silicon - 2D Proof Map</text>
+
+  <!-- Edges -->
+  <g stroke="rgba(74,158,255,0.15)" stroke-width="1">
+    <line x1="150" y1="400" x2="250" y2="350"/>
+    <line x1="250" y1="350" x2="350" y2="280"/>
+    <line x1="350" y1="280" x2="450" y2="220"/>
+    <line x1="450" y1="220" x2="550" y2="180"/>
+    <line x1="550" y1="180" x2="650" y2="150"/>
+    <line x1="250" y1="350" x2="300" y2="400"/>
+    <line x1="350" y1="280" x2="400" y2="350"/>
+    <line x1="450" y1="220" x2="500" y2="280"/>
+    <line x1="550" y1="180" x2="600" y2="250"/>
+    <line x1="200" y1="380" x2="320" y2="320"/>
+    <line x1="400" y1="250" x2="520" y2="200"/>
+    <line x1="480" y1="260" x2="580" y2="190"/>
+  </g>
+
+  <!-- InfoTheory/Core nodes -->
+  <circle cx="150" cy="400" r="6" fill="#a3a3a3"/>
+  <circle cx="180" cy="380" r="5" fill="#a3a3a3"/>
+
+  <!-- InfoTheory/FinDist nodes -->
+  <circle cx="250" cy="350" r="8" fill="#5e9cff"/>
+  <circle cx="280" cy="330" r="5" fill="#5e9cff"/>
+  <circle cx="300" cy="360" r="5" fill="#5e9cff"/>
+
+  <!-- InfoTheory/Entropy nodes -->
+  <circle cx="200" cy="280" r="6" fill="#c77dff"/>
+  <circle cx="230" cy="260" r="5" fill="#c77dff"/>
+
+  <!-- InfoTheory/MutualInfo nodes -->
+  <circle cx="350" cy="280" r="7" fill="#4ade80"/>
+  <circle cx="380" cy="260" r="5" fill="#4ade80"/>
+
+  <!-- Silicon/Model nodes -->
+  <circle cx="450" cy="220" r="8" fill="#fbbf24"/>
+  <circle cx="480" cy="200" r="5" fill="#fbbf24"/>
+  <circle cx="420" cy="240" r="5" fill="#fbbf24"/>
+
+  <!-- Silicon/Leakage nodes -->
+  <circle cx="550" cy="180" r="8" fill="#ef4444"/>
+  <circle cx="580" cy="160" r="6" fill="#ef4444"/>
+  <circle cx="520" cy="200" r="5" fill="#ef4444"/>
+
+  <!-- Silicon/Predictability nodes -->
+  <circle cx="650" cy="150" r="7" fill="#14b8a6"/>
+  <circle cx="680" cy="130" r="5" fill="#14b8a6"/>
+  <circle cx="700" cy="160" r="6" fill="#14b8a6"/>
+
+  <!-- Silicon/Cost nodes -->
+  <circle cx="680" cy="220" r="6" fill="#eab308"/>
+  <circle cx="710" cy="200" r="5" fill="#eab308"/>
+
+  <!-- Silicon/Channel nodes -->
+  <circle cx="550" cy="320" r="6" fill="#d946ef"/>
+  <circle cx="580" cy="300" r="5" fill="#d946ef"/>
+
+  <!-- Silicon/PUF nodes -->
+  <circle cx="620" cy="380" r="7" fill="#10b981"/>
+  <circle cx="650" cy="360" r="5" fill="#10b981"/>
+
+  <!-- Silicon/Examples nodes -->
+  <circle cx="480" cy="400" r="5" fill="#64748b"/>
+  <circle cx="510" cy="420" r="5" fill="#64748b"/>
+
+  <!-- Legend -->
+  <rect x="30" y="60" width="160" height="200" rx="6" fill="#0f1721" stroke="#1c2a3a"/>
+  <text x="45" y="82" fill="#e6eef7" font-family="system-ui" font-size="11" font-weight="bold">Module Families</text>
+
+  <circle cx="45" cy="100" r="4" fill="#5e9cff"/>
+  <text x="55" y="104" fill="#e6eef7" font-family="system-ui" font-size="9">InfoTheory/FinDist</text>
+
+  <circle cx="45" cy="118" r="4" fill="#4ade80"/>
+  <text x="55" y="122" fill="#e6eef7" font-family="system-ui" font-size="9">InfoTheory/MutualInfo</text>
+
+  <circle cx="45" cy="136" r="4" fill="#fbbf24"/>
+  <text x="55" y="140" fill="#e6eef7" font-family="system-ui" font-size="9">Silicon/Model</text>
+
+  <circle cx="45" cy="154" r="4" fill="#ef4444"/>
+  <text x="55" y="158" fill="#e6eef7" font-family="system-ui" font-size="9">Silicon/Leakage</text>
+
+  <circle cx="45" cy="172" r="4" fill="#14b8a6"/>
+  <text x="55" y="176" fill="#e6eef7" font-family="system-ui" font-size="9">Silicon/Predictability</text>
+
+  <circle cx="45" cy="190" r="4" fill="#eab308"/>
+  <text x="55" y="194" fill="#e6eef7" font-family="system-ui" font-size="9">Silicon/Cost</text>
+
+  <circle cx="45" cy="208" r="4" fill="#d946ef"/>
+  <text x="55" y="212" fill="#e6eef7" font-family="system-ui" font-size="9">Silicon/Channel</text>
+
+  <circle cx="45" cy="226" r="4" fill="#10b981"/>
+  <text x="55" y="230" fill="#e6eef7" font-family="system-ui" font-size="9">Silicon/PUF</text>
+
+  <!-- Stats -->
+  <text x="400" y="480" text-anchor="middle" fill="#6b7d8c" font-family="system-ui" font-size="11">49 declarations | 10 modules | Click to explore interactively</text>
+</svg>

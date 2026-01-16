@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Speaking to Silicon - 3D Proof Map</title>
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --card: #0f1721;
+      --border: #1c2a3a;
+      --text: #e6eef7;
+      --dim: #6b7d8c;
+      --accent: #4a9eff;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+    }
+    #container { width: 100vw; height: 100vh; }
+    #controls {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      max-width: 280px;
+      z-index: 10;
+    }
+    h1 {
+      font-size: 16px;
+      margin-bottom: 12px;
+      color: var(--accent);
+    }
+    input[type="text"] {
+      width: 100%;
+      padding: 8px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+      margin-bottom: 12px;
+    }
+    button {
+      padding: 8px 16px;
+      background: var(--accent);
+      border: none;
+      border-radius: 4px;
+      color: white;
+      cursor: pointer;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+    button:hover { opacity: 0.9; }
+    #legend {
+      max-height: 250px;
+      overflow-y: auto;
+      margin-top: 12px;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      padding: 4px 0;
+      cursor: pointer;
+      opacity: 0.8;
+    }
+    .legend-item:hover { opacity: 1; }
+    .legend-color {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+      margin-right: 8px;
+    }
+    .legend-label { font-size: 12px; }
+    #tooltip {
+      position: absolute;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 8px 12px;
+      font-size: 12px;
+      pointer-events: none;
+      display: none;
+      z-index: 100;
+    }
+    #info {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      font-size: 11px;
+      color: var(--dim);
+    }
+  </style>
+</head>
+<body>
+  <div id="container"></div>
+  <div id="controls">
+    <h1>Speaking to Silicon 3D</h1>
+    <input type="text" id="search" placeholder="Search declarations...">
+    <button id="autoRotate">Auto-Rotate</button>
+    <button id="resetView">Reset View</button>
+    <div id="legend"></div>
+  </div>
+  <div id="tooltip"></div>
+  <div id="info">Drag: rotate | Scroll: zoom | Click: select</div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+  <script src="silicon_proofs_data.js"></script>
+  <script>
+    const container = document.getElementById('container');
+    const tooltip = document.getElementById('tooltip');
+    const search = document.getElementById('search');
+    const legend = document.getElementById('legend');
+
+    // Three.js setup
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x0b0f14);
+
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+    camera.position.set(2, 2, 2);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    container.appendChild(renderer.domElement);
+
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.autoRotate = false;
+    controls.autoRotateSpeed = 0.5;
+
+    // Create nodes
+    const nodes = [];
+    const nodeMap = new Map();
+    const items = siliconProofsData.items;
+
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      const color = new THREE.Color(siliconColors[item.family] || '#ffffff');
+      const geometry = new THREE.SphereGeometry(0.02, 16, 16);
+      const material = new THREE.MeshBasicMaterial({ color });
+      const sphere = new THREE.Mesh(geometry, material);
+      sphere.position.set(
+        (item.pos.x - 0.5) * 2,
+        (item.pos.z - 0.5) * 2,
+        (item.pos.y - 0.5) * 2
+      );
+      sphere.userData = item;
+      scene.add(sphere);
+      nodes.push(sphere);
+      nodeMap.set(item, sphere);
+    }
+
+    // Create edges
+    const edgeMaterial = new THREE.LineBasicMaterial({
+      color: 0x4a9eff,
+      transparent: true,
+      opacity: 0.2
+    });
+
+    for (const [i, j] of siliconProofsData.edges) {
+      const a = nodes[i], b = nodes[j];
+      const geometry = new THREE.BufferGeometry().setFromPoints([
+        a.position, b.position
+      ]);
+      const line = new THREE.Line(geometry, edgeMaterial);
+      scene.add(line);
+    }
+
+    // Raycaster for interaction
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
+    let hoveredNode = null;
+
+    function onMouseMove(event) {
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+      raycaster.setFromCamera(mouse, camera);
+      const intersects = raycaster.intersectObjects(nodes);
+
+      if (intersects.length > 0) {
+        const node = intersects[0].object;
+        if (node !== hoveredNode) {
+          if (hoveredNode) hoveredNode.scale.setScalar(1);
+          hoveredNode = node;
+          hoveredNode.scale.setScalar(1.5);
+        }
+        const item = node.userData;
+        tooltip.style.display = 'block';
+        tooltip.style.left = (event.clientX + 15) + 'px';
+        tooltip.style.top = (event.clientY + 15) + 'px';
+        tooltip.innerHTML = `<strong>${item.name}</strong><br>${item.kind} | ${item.family}`;
+      } else {
+        if (hoveredNode) {
+          hoveredNode.scale.setScalar(1);
+          hoveredNode = null;
+        }
+        tooltip.style.display = 'none';
+      }
+    }
+
+    window.addEventListener('mousemove', onMouseMove);
+
+    // Controls
+    document.getElementById('autoRotate').addEventListener('click', () => {
+      controls.autoRotate = !controls.autoRotate;
+    });
+
+    document.getElementById('resetView').addEventListener('click', () => {
+      camera.position.set(2, 2, 2);
+      controls.reset();
+    });
+
+    // Search filter
+    search.addEventListener('input', () => {
+      const query = search.value.toLowerCase();
+      for (const node of nodes) {
+        const visible = !query || node.userData.name.toLowerCase().includes(query);
+        node.visible = visible;
+      }
+    });
+
+    // Legend
+    const families = [...new Set(items.map(i => i.family))].sort();
+    const activeFilters = new Set();
+
+    for (const family of families) {
+      const div = document.createElement('div');
+      div.className = 'legend-item';
+      div.innerHTML = `<div class="legend-color" style="background:${siliconColors[family]}"></div><span class="legend-label">${family}</span>`;
+      div.addEventListener('click', () => {
+        if (activeFilters.has(family)) {
+          activeFilters.delete(family);
+          div.style.opacity = '0.8';
+        } else {
+          activeFilters.add(family);
+          div.style.opacity = '1';
+        }
+        if (activeFilters.size === families.length) activeFilters.clear();
+
+        for (const node of nodes) {
+          const show = activeFilters.size === 0 || activeFilters.has(node.userData.family);
+          node.visible = show;
+        }
+      });
+      legend.appendChild(div);
+    }
+
+    // Resize handler
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    // Animation loop
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+    animate();
+  </script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Speaking to Silicon - Visualizations</title>
+  <style>
+    :root {
+      --bg: #0b0f14;
+      --card: #0f1721;
+      --border: #1c2a3a;
+      --text: #e6eef7;
+      --dim: #6b7d8c;
+      --accent: #4a9eff;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 40px;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    h1 {
+      color: var(--accent);
+      margin-bottom: 8px;
+      font-size: 28px;
+    }
+    .subtitle {
+      color: var(--dim);
+      margin-bottom: 40px;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 24px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: transform 0.2s, border-color 0.2s;
+    }
+    .card:hover {
+      transform: translateY(-4px);
+      border-color: var(--accent);
+    }
+    .card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+    }
+    .card-content {
+      padding: 20px;
+    }
+    .card h2 {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+    .card p {
+      color: var(--dim);
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+    .card a {
+      display: inline-block;
+      padding: 10px 20px;
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .card a:hover { opacity: 0.9; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Speaking to Silicon</h1>
+    <p class="subtitle">Interactive proof graph visualizations for silicon information leakage formalization</p>
+
+    <div class="cards">
+      <div class="card">
+        <img src="silicon_2d_preview.svg" alt="2D Proof Map">
+        <div class="card-content">
+          <h2>2D Proof Map</h2>
+          <p>Pan, zoom, and search through 49 declarations across 10 modules. Filter by module family to explore specific components.</p>
+          <a href="silicon_2d.html">Open 2D Viewer</a>
+        </div>
+      </div>
+
+      <div class="card">
+        <img src="silicon_3d_preview_animated.svg" alt="3D Proof Map">
+        <div class="card-content">
+          <h2>3D Proof Map</h2>
+          <p>Rotate, zoom, and explore the proof graph in three dimensions. Auto-rotate mode available for presentations.</p>
+          <a href="silicon_3d.html">Open 3D Viewer</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
